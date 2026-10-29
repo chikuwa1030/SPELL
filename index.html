@@ -7,14 +7,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SPELL">
 <meta property="og:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
-<meta property="og:description" content="30秒で叩き出す最大ダメージ。5属性の相性、ノーミス連続、FEVERで大ダメージを狙え。全国ランキングで上位何%か分かる。">
+<meta property="og:description" content="50秒で叩き出す最大ダメージ。5属性の相性、ノーミス連続、FEVERで大ダメージを狙え。全国ランキングで上位何%か分かる。">
 <meta property="og:url" content="https://chikuwa1030.github.io/SPELL/">
 <meta property="og:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
-<meta name="twitter:description" content="30秒で叩き出す最大ダメージ。ノーミス連続でFEVER、全国ランキングで上位何%か分かる。">
+<meta name="twitter:description" content="50秒で叩き出す最大ダメージ。ノーミス連続でFEVER、全国ランキングで上位何%か分かる。">
 <meta name="twitter:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
 <meta name="description" content="SPELL（スペル）は、画面に出る言葉をタイピングで詠唱して魔物にダメージを与えるブラウザタイピングゲーム。5属性の相性、ノーミス連続、FEVERで大ダメージを狙い、全国ランキングで上位を目指そう。">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -403,7 +403,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
 
 <div class="wrap">
   <div class="hud">
-    <div class="stat"><span class="k">残り時間</span><span class="v" id="timeV">30.0</span></div>
+    <div class="stat"><span class="k">残り時間</span><span class="v" id="timeV">50.0</span></div>
     <div class="stat"><span class="k">総ダメージ</span><span class="v" id="dmgV">0</span></div>
     <div class="stat cstat"><span class="k">ノーミス連続</span><span class="v" id="comboV">0</span></div>
     <button id="snd" aria-label="効果音の切り替え">音 ON</button>
@@ -437,7 +437,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
   <div class="box">
     <div class="logo" aria-label="SPELL"><span class="spark s1">✦</span><span class="word">SPELL</span><span class="spark s2">✦</span></div>
     <div class="tag">TYPING × MAGIC × JACKPOT</div>
-    <p>30秒間、次々現れる魔物に呪文を撃ち込んで<br>総ダメージを競います。</p>
+    <p>50秒間、次々現れる魔物に呪文を撃ち込んで<br>総ダメージを競います。</p>
     <dl class="rules">
       <dt>属性</dt><dd>水は火に、火は木に、木は水に強い。光と闇はお互いに強い</dd>
       <dt>連続</dt><dd>ノーミスで打ち続けるほど威力アップ</dd>
@@ -500,7 +500,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
 
 <section data-doc="howto">
 <h2 id="docTitle">遊び方</h2>
-<p>SPELL（スペル）は、画面に出てくる言葉をタイピングして「詠唱」し、魔物にダメージを与えるタイピングゲームです。制限時間30秒のあいだに、どれだけ大きなダメージを積み上げられるかを競います。</p>
+<p>SPELL（スペル）は、画面に出てくる言葉をタイピングして「詠唱」し、魔物にダメージを与えるタイピングゲームです。制限時間50秒のあいだに、どれだけ大きなダメージを積み上げられるかを競います。</p>
 
 <h3>基本の流れ</h3>
 <ol>
@@ -1135,7 +1135,7 @@ function start(m){
   fillAll();spawnEnemy();renderEnemy();render();hud();setHint();
   resetKana();
   $("startOv").hidden=true;$("endOv").hidden=true;
-  running=true;endAt=performance.now()+30000;
+  running=true;endAt=performance.now()+50000;
   se.start();say("詠唱開始！",true);
   if(mode==="kana")focusKin();
   ambient();
