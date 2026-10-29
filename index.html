@@ -131,6 +131,16 @@ body.fever .rframe{opacity:1;padding:10px;animation:ang .8s linear infinite}
 body.fever .arena{box-shadow:inset 0 0 60px #ffe06655;border-radius:12px}
 .fv{color:#ffe066!important;animation:glint .3s steps(2) infinite}
 
+/* 相性の見える化：抜群は光って目立ち、いまひとつは暗く沈む */
+.eff{font-size:11px;padding:1px 7px;border-radius:999px;white-space:nowrap;font-weight:700;letter-spacing:.02em}
+.eff.good{background:#ffe066;color:#3a2400;box-shadow:0 0 10px #ffe066aa;animation:effp 1s ease-in-out infinite}
+.eff.bad{background:transparent;color:var(--dim);border:1px dashed var(--line)}
+.card.good{box-shadow:0 0 0 2px #ffe066,0 0 18px #ffe06677!important}
+.card.good .kana{color:#fff6c8}
+.card.bad{opacity:.5;filter:saturate(.4)}
+.card.bad.active{opacity:.85}
+@keyframes effp{50%{box-shadow:0 0 18px #ffe066;transform:scale(1.06)}}
+@media (prefers-reduced-motion:reduce){.eff.good{animation:none}}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0;transition:border-color .15s,transform .15s}
 .card.active{border-color:var(--gold)!important;transform:translateY(-3px)}
@@ -462,7 +472,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
       <button id="t3btn" class="t3btn" data-rank-open>ランキングを見る</button>
     </div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454 · v1.4</div>
+    <div class="crt">© 2026 Camellia1454 · v1.5</div>
   </div>
 </div>
 
@@ -486,7 +496,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
     <a id="shareX" class="xbtn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">𝕏 でシェア</a>
     <div class="row"><button id="againBtn">もう一度</button><button id="modeBtn" class="alt" style="background:transparent;color:var(--gold);border:1px solid var(--gold)">モード選択へ</button></div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454 · v1.4</div>
+    <div class="crt">© 2026 Camellia1454 · v1.5</div>
   </div>
 </div>
 <div class="overlay doc" id="docOv" hidden>
@@ -1030,6 +1040,7 @@ function setElVisual(){
   $("target").style.setProperty("--elc",c);
   $("ename").style.color=c;
   const e=$("emblem");if(e)e.textContent=EL[enemy.el].jp;
+  if(slots)render();
 }
 function rotateBossWeak(){
   let n;do{n=randEl()}while(n===enemy.el);
@@ -1059,8 +1070,10 @@ function cardHTML(s,i){
   const t=TIER[s.tier];
   const len=mode==="roma"?s.len+"字":s.kana.length+"文字";
   const p=mode==="roma"?s.i:s.pos;
-  return `<div class="card el-${s.el}${active===i?" active":""}${s.wrong?" wrong":""}">
-    <div class="top"><span class="tl">${t.label}・${len}</span><span class="el ${s.el}">${EL[s.el].jp}属性</span></div>
+  const eff=!enemy?"":s.el===enemy.weak?"good":s.el===enemy.resist?"bad":"";
+  const effTag=eff==="good"?'<span class="eff good">▲ 抜群 ×1.5</span>':eff==="bad"?'<span class="eff bad">▼ いまひとつ ×0.5</span>':"";
+  return `<div class="card el-${s.el}${eff?" "+eff:""}${active===i?" active":""}${s.wrong?" wrong":""}">
+    <div class="top"><span class="tl">${t.label}・${len}</span>${effTag}<span class="el ${s.el}">${EL[s.el].jp}属性</span></div>
     <div class="kana"><span class="done">${s.kana.slice(0,p)}</span><span class="rest">${s.kana.slice(p)}</span></div>
     <div class="roma"><span class="done">${s.typed}</span><span class="rest">${restRoma(s.kana,s.i,s.buf)}</span></div>
     <div class="meta"><span>基礎 ${baseDmg(s)}</span><span class="${s.miss?"miss":""}">${s.miss?"ミス "+s.miss:""}</span></div>
