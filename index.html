@@ -282,6 +282,7 @@ button:focus-visible{outline:2px solid var(--parch);outline-offset:3px}
 .nick button{font-size:13px;padding:7px 12px;background:transparent;color:var(--gold);border:1px solid var(--gold)}
 .nickmsg{font-size:11px;color:var(--gold);min-height:0;margin-top:-6px}
 .nickmsg:empty{display:none}
+#nickMsg{color:var(--dim)}
 .who{display:flex;justify-content:center;align-items:baseline;gap:8px;font-size:16px}
 .who small{font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:0 8px}
 .ranksub{background:linear-gradient(90deg,#d9b45a,#ffe9a0,#d9b45a);color:#3a2400}
@@ -448,9 +449,8 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
     <div class="nick">
       <label for="nickIn">魔導士名</label>
       <input id="nickIn" maxlength="10" autocomplete="nickname" spellcheck="false">
-      <button id="nickSave">保存</button>
     </div>
-    <div class="nickmsg" id="nickMsg" aria-live="polite"></div>
+    <div class="nickmsg" id="nickMsg" aria-live="polite">入力した名前は自動で保存されます</div>
     <div class="modes">
       <button id="btnRoma">ローマ字<small id="romaSub">キーボードで直接打つ</small></button>
       <button id="btnKana" class="alt">かな入力<small id="kanaSub">日本語入力（IME）で打つ</small></button>
@@ -462,7 +462,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
       <button id="t3btn" class="t3btn" data-rank-open>ランキングを見る</button>
     </div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454</div>
+    <div class="crt">© 2026 Camellia1454 · v1.4</div>
   </div>
 </div>
 
@@ -486,7 +486,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
     <a id="shareX" class="xbtn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">𝕏 でシェア</a>
     <div class="row"><button id="againBtn">もう一度</button><button id="modeBtn" class="alt" style="background:transparent;color:var(--gold);border:1px solid var(--gold)">モード選択へ</button></div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454</div>
+    <div class="crt">© 2026 Camellia1454 · v1.4</div>
   </div>
 </div>
 <div class="overlay doc" id="docOv" hidden>
@@ -1490,7 +1490,7 @@ let nickTimer=null,nickSynced=nick;
 function saveNick(){
   storeNick();$("nickIn").value=nick;
   const m=$("nickMsg");m.textContent=nick?"保存しました":"未入力のときは「"+DEFAULT_NAME+"」になります";
-  clearTimeout(m._t);m._t=setTimeout(()=>m.textContent="",2200);
+  clearTimeout(m._t);m._t=setTimeout(()=>m.textContent="入力した名前は自動で保存されます",2200);
   syncNickOnline();
 }
 // すでにランキングに載っている記録の名前も新しい名前に変える（点数は変わらない）
@@ -1510,7 +1510,7 @@ async function syncNickOnline(){
 }
 $("nickIn").addEventListener("input",()=>{storeNick();clearTimeout(nickTimer);nickTimer=setTimeout(syncNickOnline,1500)});
 $("nickIn").addEventListener("blur",()=>{storeNick();syncNickOnline()});
-$("nickSave").addEventListener("click",saveNick);
+
 $("nickIn").addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveNick();$("nickIn").blur()}});
 renderNick();
 // タイトル画面の全国TOP3
