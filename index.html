@@ -3,6 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SPELL</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SPELL">
+<meta property="og:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
+<meta property="og:description" content="30秒で叩き出す最大ダメージ。5属性の相性、ノーミス連続、FEVERで大ダメージを狙え。全国ランキングで上位何%か分かる。">
+<meta property="og:url" content="https://chikuwa1030.github.io/SPELL/">
+<meta property="og:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
+<meta name="twitter:description" content="30秒で叩き出す最大ダメージ。ノーミス連続でFEVER、全国ランキングで上位何%か分かる。">
+<meta name="twitter:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
 <meta name="description" content="SPELL（スペル）は、画面に出る言葉をタイピングで詠唱して魔物にダメージを与えるブラウザタイピングゲーム。5属性の相性、ノーミス連続、FEVERで大ダメージを狙い、全国ランキングで上位を目指そう。">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -248,6 +261,18 @@ button:focus-visible{outline:2px solid var(--parch);outline-offset:3px}
 .copy{font-size:12px;padding:2px 8px;margin-left:6px}
 @media (max-width:640px){.docbody{padding:14px 14px 22px}.ddl{grid-template-columns:1fr}.ddl dt{margin-top:6px}}
 
+.top3{border:1px solid var(--gold);border-radius:8px;padding:10px 12px;background:radial-gradient(circle at 50% 0%,#d9b45a22,transparent 70%);display:flex;flex-direction:column;gap:6px;text-align:left}
+.t3head{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;color:var(--gold)}
+.t3head small{font-size:11px;color:var(--dim)}
+#t3list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+#t3list li{display:grid;grid-template-columns:1.6em 1fr auto;gap:8px;align-items:center;font-size:14px}
+#t3list .n{font-family:var(--f-mono);font-weight:700;text-align:center}
+#t3list li:nth-child(1) .n{color:#ffd54a}#t3list li:nth-child(2) .n{color:#d6dbe6}#t3list li:nth-child(3) .n{color:#e0965a}
+#t3list .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#t3list .nm small{font-size:10px;color:var(--dim);margin-left:4px}
+#t3list .sc{font-family:var(--f-mono);font-weight:700;font-variant-numeric:tabular-nums}
+#t3list .t3empty{display:block;font-size:12px;color:var(--dim)}
+.t3btn{font-size:14px;padding:7px 12px;background:transparent;color:var(--gold);border:1px solid var(--gold)}
 /* ニックネーム・ランキング */
 .nick{display:flex;align-items:center;gap:8px}
 .nick label{font-size:12px;color:var(--dim);white-space:nowrap}
@@ -261,6 +286,7 @@ button:focus-visible{outline:2px solid var(--parch);outline-offset:3px}
 .ranksub{background:linear-gradient(90deg,#d9b45a,#ffe9a0,#d9b45a);color:#3a2400}
 .ranksub[disabled]{opacity:.5;cursor:default}
 .rankbox{max-width:460px;text-align:left;gap:0;padding:0;max-height:calc(100% - 32px);overflow:hidden;display:flex;flex-direction:column}
+.rstate{font-size:11px;color:var(--dim);margin-right:8px;white-space:nowrap}.rstate.on{color:#3ddc84}
 .rtitle{margin:0;flex:1;font-family:var(--f-disp);font-weight:400;font-size:18px;color:var(--gold)}
 .ranktabs{display:flex;gap:4px;padding:10px 12px 0}
 .ranktabs button{font-size:13px;padding:5px 10px;background:transparent;color:var(--dim);border:1px solid var(--line)}
@@ -427,6 +453,11 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
       <button id="btnKana" class="alt">かな入力<small id="kanaSub">日本語入力（IME）で打つ</small></button>
     </div>
     <button id="guideBtn" class="guide" aria-pressed="true">ローマ字ガイド：あり</button>
+    <div class="top3">
+      <div class="t3head"><span>🏆 全国TOP3</span><small id="t3mode"></small></div>
+      <ol id="t3list"><li class="t3empty">読み込み中…</li></ol>
+      <button id="t3btn" class="t3btn" data-rank-open>ランキングを見る</button>
+    </div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
   </div>
 </div>
@@ -574,7 +605,8 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
 <div class="overlay doc" id="rankOv" hidden>
   <div class="box rankbox" role="dialog" aria-modal="true" aria-labelledby="rankTitle">
     <div class="dochead">
-      <h2 id="rankTitle" class="rtitle">全国ランキング TOP10</h2>
+      <h2 id="rankTitle" class="rtitle">全国ランキング TOP100</h2>
+      <span class="rstate" id="rankState"></span>
       <button class="docx" id="rankClose" aria-label="閉じる">×</button>
     </div>
     <div class="ranktabs" role="tablist">
@@ -1090,6 +1122,7 @@ function stopFever(silent){
 }
 function start(m){
   if(m)mode=m;
+  playedOnce=true;
   document.body.classList.toggle("mode-kana",mode==="kana");
   document.body.classList.toggle("mode-roma",mode==="roma");
   flick=mode==="kana"&&isTouch;
@@ -1446,6 +1479,25 @@ function saveNick(){
 $("nickSave").addEventListener("click",saveNick);
 $("nickIn").addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveNick();$("nickIn").blur()}});
 renderNick();
+// タイトル画面の全国TOP3
+let playedOnce=false;
+async function loadTop3(){
+  const k=playedOnce||!isTouch?modeKey():"kana",list=$("t3list");
+  $("t3mode").textContent=RANK_MODES[k];
+  try{
+    const rows=await fetchRanking(k,3);
+    list.innerHTML="";
+    if(!rows.length){list.innerHTML='<li class="t3empty">まだ記録がありません。最初の1位になろう</li>';return}
+    rows.forEach((r,i)=>{
+      const li=document.createElement("li");
+      const n=document.createElement("span");n.className="n";n.textContent=i+1;
+      const nm=document.createElement("span");nm.className="nm";nm.textContent=r.name;
+      if(r.sample){const t=document.createElement("small");t.textContent="サンプル";nm.appendChild(t)}
+      const sc=document.createElement("span");sc.className="sc";sc.textContent=r.score.toLocaleString();
+      li.append(n,nm,sc);list.appendChild(li);
+    });
+  }catch(e){list.innerHTML='<li class="t3empty">ランキングを読み込めませんでした</li>'}
+}
 
 /* ---------- ランキング ----------
    ★ 本番設定：Supabase の Project URL と公開キー（anon / publishable key）をここに入れる。
@@ -1547,11 +1599,12 @@ async function openRank(k){
   rankTab=k||rankTab;
   document.querySelectorAll(".ranktabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.rank===rankTab));
   $("rankNote").hidden=ONLINE;
+  $("rankState").textContent=ONLINE?"● オンライン":"○ この端末のみ";$("rankState").className="rstate"+(ONLINE?" on":"");
   $("rankOv").hidden=false;
   const list=$("rankList"),mineBox=$("rankMine");
   list.innerHTML='<li class="rload">読み込み中…</li>';mineBox.innerHTML="";
   let rows,mine;
-  try{[rows,mine]=await Promise.all([fetchRanking(rankTab,10),fetchMine(rankTab)])}
+  try{[rows,mine]=await Promise.all([fetchRanking(rankTab,100),fetchMine(rankTab)])}
   catch(e){list.innerHTML='<li class="rload">ランキングに接続できませんでした。通信状況を確認して、もう一度開いてください。</li>';return}
   list.innerHTML="";
   if(!rows.length){list.innerHTML='<li class="rload">まだ記録がありません。最初の1人になりましょう。</li>'}
@@ -1600,6 +1653,7 @@ function showPct(rank,total,notBest){
   if(p<=10){rainbow();if(typeof coins==="function")coins(16)}
   const r=$("shareX");r.href=r.href.replace(/(text=)([^&]*)/,(m,a,t)=>a+encodeURIComponent(decodeURIComponent(t).replace("\n","（全国"+pctText(rank,total)+"）\n")));
 }
+setTimeout(loadTop3,0);
 function resetSubmit(){
   submitted=false;const b=$("rankSubmit");b.disabled=total<=0;b.textContent="🏆 ランキングに登録する";
   $("rWho").textContent=nickName();$("rMode").textContent=RANK_MODES[modeKey()];
@@ -1626,14 +1680,14 @@ document.addEventListener("keydown",e=>{
 $("btnRoma").addEventListener("click",()=>start("roma"));
 $("btnKana").addEventListener("click",()=>start("kana"));
 $("againBtn").addEventListener("click",()=>start());
-$("modeBtn").addEventListener("click",()=>{$("endOv").hidden=true;$("startOv").hidden=false});
+$("modeBtn").addEventListener("click",()=>{$("endOv").hidden=true;$("startOv").hidden=false;loadTop3()});
 let guide=true;
 try{guide=localStorage.getItem("eishou-guide")!=="0"}catch(e){}
 function guideLabel(){
   const g=$("guideBtn");g.textContent=guide?"ローマ字ガイド：あり":"ローマ字ガイド：なし（上級）";g.setAttribute("aria-pressed",guide);
   document.body.classList.toggle("noguide",!guide);
 }
-$("guideBtn").addEventListener("click",()=>{guide=!guide;try{localStorage.setItem("eishou-guide",guide?"1":"0")}catch(e){}guideLabel()});
+$("guideBtn").addEventListener("click",()=>{guide=!guide;try{localStorage.setItem("eishou-guide",guide?"1":"0")}catch(e){}guideLabel();loadTop3()});
 guideLabel();
 function sndLabel(){$("snd").textContent=muted?"音 OFF":"音 ON"}
 $("snd").addEventListener("click",()=>{
