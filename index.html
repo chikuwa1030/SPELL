@@ -1128,6 +1128,7 @@ function stopFever(silent){
 }
 function start(m){
   if(m)mode=m;
+  if(typeof storeNick==="function"){storeNick();syncNickOnline()}
   playedOnce=true;
   document.body.classList.toggle("mode-kana",mode==="kana");
   document.body.classList.toggle("mode-roma",mode==="roma");
@@ -1477,13 +1478,38 @@ try{nick=localStorage.getItem("spell-nick")||""}catch(e){}
 const nickName=()=>nick||DEFAULT_NAME;
 function cleanNick(v){return v.replace(/[\u0000-\u001f<>]/g,"").trim().slice(0,10)}
 function renderNick(){$("nickIn").value=nick;$("nickIn").placeholder=DEFAULT_NAME;$("rWho").textContent=nickName()}
+// 入力欄の名前をそのまま保存（保存ボタンを押さなくても、打った時点で反映）
+function storeNick(){
+  const v=cleanNick($("nickIn").value);
+  const changed=v!==nick;
+  nick=v;try{localStorage.setItem("spell-nick",nick)}catch(e){}
+  $("rWho").textContent=nickName();
+  return changed;
+}
+let nickTimer=null,nickSynced=nick;
 function saveNick(){
-  nick=cleanNick($("nickIn").value);$("nickIn").value=nick;
-  try{localStorage.setItem("spell-nick",nick)}catch(e){}
+  storeNick();$("nickIn").value=nick;
   const m=$("nickMsg");m.textContent=nick?"保存しました":"未入力のときは「"+DEFAULT_NAME+"」になります";
   clearTimeout(m._t);m._t=setTimeout(()=>m.textContent="",2200);
-  renderNick();
+  syncNickOnline();
 }
+// すでにランキングに載っている記録の名前も新しい名前に変える（点数は変わらない）
+async function syncNickOnline(){
+  if(typeof ONLINE==="undefined"||!ONLINE||nickSynced===nick)return;
+  const target=nick;
+  for(const m of Object.keys(RANK_MODES)){
+    if(!myRow(m))continue;
+    try{
+      const mine=await fetchMine(m);
+      if(!mine){try{localStorage.removeItem(myRowKey(m))}catch(e){}continue}
+      await submitScore({mode:m,name:nickName(),score:0,kills:0});
+    }catch(e){}
+  }
+  nickSynced=target;
+  if(typeof loadTop3==="function")loadTop3();
+}
+$("nickIn").addEventListener("input",()=>{storeNick();clearTimeout(nickTimer);nickTimer=setTimeout(syncNickOnline,1500)});
+$("nickIn").addEventListener("blur",()=>{storeNick();syncNickOnline()});
 $("nickSave").addEventListener("click",saveNick);
 $("nickIn").addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Enter"&&!e.isComposing){e.preventDefault();saveNick();$("nickIn").blur()}});
 renderNick();
