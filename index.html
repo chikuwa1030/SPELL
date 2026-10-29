@@ -352,9 +352,11 @@ body.flick.mode-roma .card{display:grid;grid-template-columns:1fr auto;grid-temp
 body.flick.mode-roma .card .kana{grid-area:k;font-size:17px}
 body.flick.mode-roma .card .roma{grid-area:r;font-size:12px;line-height:1.2;white-space:nowrap}
 body.flick.mode-roma .card .top{grid-area:t;align-self:center}
-.qrow{display:flex;gap:4px;justify-content:center}
-.qkey{position:relative;flex:1 1 0;max-width:44px;height:clamp(44px,7.5vh,56px);border-radius:6px;background:#262b52;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:19px;color:var(--parch)}
-.qkey.fn{flex:1.6 1 0;max-width:72px;font-family:var(--f-disp);font-size:13px;background:#1d2142}
+/* iPhone標準と同じ位置関係：20列グリッドで1キー=2列。2段目は半キー右にずらし、3段目は左右の機能キーが1.5キー幅 */
+.qk{max-width:520px;margin:0 auto;width:100%}
+.qrow{display:grid;grid-template-columns:repeat(20,1fr);column-gap:5px}
+.qkey{position:relative;grid-column:span 2;min-width:0;height:clamp(44px,7.5vh,56px);border-radius:6px;background:#262b52;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:19px;color:var(--parch)}
+.qkey.fn{grid-column:span 3;font-family:var(--f-disp);font-size:13px;background:#1d2142}
 .qkey.down{background:var(--gold);color:var(--ink)}
 .qkey .pv{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-6px);width:46px;height:50px;border-radius:9px;background:var(--parch);color:var(--ink);font-size:26px;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px #000a;pointer-events:none;z-index:3}
 .qkey:not(.fn).down .pv{display:flex}
@@ -1397,11 +1399,13 @@ buildFK();
 /* ---------- ゲーム内ローマ字キーボード ---------- */
 function buildQK(){
   const qk=$("qk");qk.innerHTML="";
-  ["qwertyuiop","asdfghjkl-","!zxcvbnm"].forEach(row=>{
+  ["qwertyuiop","asdfghjkl","zxcvbnm-"].forEach((row,ri)=>{
     const r=document.createElement("div");r.className="qrow";
     [...row].forEach(ch=>{
       const b=document.createElement("div");
-      b.className="qkey"+(ch==="!"?" fn":"");
+      b.className="qkey"+(ch==="!"||ch==="-"?" fn":"");
+      if(ri===1&&ch==="a")b.style.gridColumn="2 / span 2";
+      if(ri===2&&ch==="z")b.style.gridColumn="4 / span 2";
       b.innerHTML=`<span>${ch==="!"?"中断":ch==="-"?"ー":ch.toUpperCase()}</span><span class="pv">${ch==="-"?"ー":ch.toUpperCase()}</span>`;
       const press=()=>{b.classList.add("down");if(!running)return;if(ch==="!")cancelRoma();else pressRoma(ch)};
       const up=()=>b.classList.remove("down");
