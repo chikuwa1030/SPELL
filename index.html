@@ -7,14 +7,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SPELL">
 <meta property="og:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
-<meta property="og:description" content="50秒で叩き出す最大ダメージ。5属性の相性、ノーミス連続、FEVERで大ダメージを狙え。全国ランキングで上位何%か分かる。">
+<meta property="og:description" content="言葉を打って呪文を撃て。5属性の相性、ノーミス連続、FEVERで最大ダメージを狙うタイピングゲーム。全国ランキングで上位何%か分かる。">
 <meta property="og:url" content="https://chikuwa1030.github.io/SPELL/">
 <meta property="og:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SPELL｜言葉を打って呪文を撃つタイピングゲーム">
-<meta name="twitter:description" content="50秒で叩き出す最大ダメージ。ノーミス連続でFEVER、全国ランキングで上位何%か分かる。">
+<meta name="twitter:description" content="言葉を打って呪文を撃つタイピングゲーム。ノーミス連続でFEVER、全国ランキングで上位何%か分かる。">
 <meta name="twitter:image" content="https://chikuwa1030.github.io/SPELL/ogp.png">
 <meta name="description" content="SPELL（スペル）は、画面に出る言葉をタイピングで詠唱して魔物にダメージを与えるブラウザタイピングゲーム。5属性の相性、ノーミス連続、FEVERで大ダメージを狙い、全国ランキングで上位を目指そう。">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -1170,7 +1170,7 @@ function end(){
   $("rAcc").textContent=keys?Math.max(0,Math.round((keys-misses)/keys*100))+"%":"—";
   $("rBest").textContent=Math.max(best,total).toLocaleString();
   $("rNote").textContent=(isBest&&total>0?"自己ベスト更新！ ":"")+(mode==="roma"?(guide?"（ローマ字モード）":"（ローマ字・ガイドなし）"):"（かな入力モード）");
-  const GAME_URL="https://chikuwa1030.github.io/SPELL/";
+  const GAME_URL="https://chikuwa1030.github.io/SPELL/?s=x1";
   const modeTxt=mode==="roma"?(guide?"ローマ字":"ローマ字・ガイドなし"):"かな入力";
   const txt=`${nickName()}がSPELLで${total.toLocaleString()}ダメージ！${isBest&&total>0?"（自己ベスト更新）":""}\n撃破数 ${kills}／最大の一撃 ${maxHit.toLocaleString()}／最大倍率 ×${maxMul.toFixed(2)}\n【${modeTxt}モード】\n#SPELL #タイピングゲーム`;
   $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(txt)+"&url="+encodeURIComponent(GAME_URL);
