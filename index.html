@@ -847,7 +847,7 @@ body:not(.flick) .target{width:min(660px,100%)}
       </div>
     </div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454 · v3.9.1</div>
+    <div class="crt">© 2026 Camellia1454 · v3.9.2</div>
   </div>
 </div>
 
@@ -870,7 +870,7 @@ body:not(.flick) .target{width:min(660px,100%)}
     <div class="actions"><a id="shareX" class="xbtn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener">𝕏 でシェア</a><button id="adBtn" class="adbtn">▶ 広告を見て +10秒 で続ける</button></div>
     <div class="row"><button id="againBtn">もう一度</button><button id="modeBtn" class="btn-ghost">モード選択へ</button></div>
     <nav class="foot" aria-label="サイト情報"><button data-rank-open>ランキング</button><span>|</span><button data-open="howto">遊び方</button><span>|</span><button data-open="privacy">プライバシーポリシー</button><span>|</span><button data-open="contact">お問い合わせ</button></nav>
-    <div class="crt">© 2026 Camellia1454 · v3.9.1</div>
+    <div class="crt">© 2026 Camellia1454 · v3.9.2</div>
   </div>
 </div>
 <div class="overlay doc" id="docOv" hidden>
@@ -1840,10 +1840,23 @@ function handleKana(s,consume){
   render();
 }
 function onKana(){
-  if(!running||mode!=="kana"||flick)return;
+  if(!running||mode!=="kana"||flick||resettingKin)return;
   const v=toHira(kin.value).replace(/\s/g,"");
   if(v.length<offset)offset=v.length;
-  handleKana(v.slice(offset),n=>{offset+=n});
+  let done=false;
+  handleKana(v.slice(offset),n=>{offset+=n;done=true});
+  // 1語打ち終わったら変換中の文字列を確定させて入力欄を空にする
+  // （PCのIMEで打った文字が全部つながって予測候補に出続けるのを防ぐ）
+  if(done&&!isTouch)setTimeout(hardResetKin,0);
+}
+let resettingKin=false;
+function hardResetKin(){
+  if(!running||mode!=="kana")return;
+  resettingKin=true;
+  try{kin.blur()}catch(e){}
+  kin.value="";offset=0;lastPend="";
+  resettingKin=false;
+  focusKin();
 }
 kin.addEventListener("compositionstart",()=>{composing=true});
 kin.addEventListener("compositionend",()=>{composing=false;onKana()});
