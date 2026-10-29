@@ -375,7 +375,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
 
 <div class="wrap">
   <div class="hud">
-    <div class="stat"><span class="k">残り時間</span><span class="v" id="timeV">60.0</span></div>
+    <div class="stat"><span class="k">残り時間</span><span class="v" id="timeV">30.0</span></div>
     <div class="stat"><span class="k">総ダメージ</span><span class="v" id="dmgV">0</span></div>
     <div class="stat cstat"><span class="k">ノーミス連続</span><span class="v" id="comboV">0</span></div>
     <button id="snd" aria-label="効果音の切り替え">音 ON</button>
@@ -409,7 +409,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
   <div class="box">
     <div class="logo" aria-label="SPELL"><span class="spark s1">✦</span><span class="word">SPELL</span><span class="spark s2">✦</span></div>
     <div class="tag">TYPING × MAGIC × JACKPOT</div>
-    <p>60秒間、次々現れる魔物に呪文を撃ち込んで<br>総ダメージを競います。</p>
+    <p>30秒間、次々現れる魔物に呪文を撃ち込んで<br>総ダメージを競います。</p>
     <dl class="rules">
       <dt>属性</dt><dd>水は火に、火は木に、木は水に強い。光と闇はお互いに強い</dd>
       <dt>連続</dt><dd>ノーミスで打ち続けるほど威力アップ</dd>
@@ -467,7 +467,7 @@ body.flick .fk{display:grid;flex:none;grid-template-columns:repeat(5,1fr);gap:5p
 
 <section data-doc="howto">
 <h2 id="docTitle">遊び方</h2>
-<p>SPELL（スペル）は、画面に出てくる言葉をタイピングして「詠唱」し、魔物にダメージを与えるタイピングゲームです。制限時間60秒のあいだに、どれだけ大きなダメージを積み上げられるかを競います。</p>
+<p>SPELL（スペル）は、画面に出てくる言葉をタイピングして「詠唱」し、魔物にダメージを与えるタイピングゲームです。制限時間30秒のあいだに、どれだけ大きなダメージを積み上げられるかを競います。</p>
 
 <h3>基本の流れ</h3>
 <ol>
@@ -981,7 +981,7 @@ function spawnEnemy(){
   if(isBoss)d=BOSS;
   else{const pool=ENEMIES.filter(e=>e.art!==lastArt);d=pool[Math.floor(Math.random()*pool.length)]}
   lastArt=d.art;
-  const hp=Math.round(400*Math.pow(1.28,stage)*(isBoss?1.5:1)/10)*10;
+  const hp=Math.round(220*Math.pow(1.25,stage)*(isBoss?1.5:1)/10)*10;
   enemy={...d,max:hp,hp};
   setEnemyEl(randEl());
   enemy.name=EL[enemy.el].title+d.name;
@@ -1100,7 +1100,7 @@ function start(m){
   fillAll();spawnEnemy();renderEnemy();render();hud();setHint();
   resetKana();
   $("startOv").hidden=true;$("endOv").hidden=true;
-  running=true;endAt=performance.now()+60000;
+  running=true;endAt=performance.now()+30000;
   se.start();say("詠唱開始！",true);
   if(mode==="kana")focusKin();
   ambient();
